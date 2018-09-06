@@ -142,7 +142,7 @@ describe DeliveryRouter do
         end
 
         it "customer 3 should not be delighted" do
-          expect(@delivery_router.delivery_time(:customer => 3)).to be > 60
+          expect(@delivery_router.delivery_time(:customer => 3)).to_not be < 60
         end
       end
     end

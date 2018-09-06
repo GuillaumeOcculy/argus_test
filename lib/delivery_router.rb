@@ -22,11 +22,9 @@ class DeliveryRouter
     @rider = @riders.detect{ |x| x.id == params[:rider] }
     restaurant = @orders.last[:restaurant]
     customer = @orders.last[:customer]
-
-    restaurant_x, restaurant_y = restaurant.x, restaurant.y
     
     nearest_rider = @riders.min do |rider1, rider2|
-      euclidean_distance([restaurant_x, restaurant_y], [rider1.x, rider1.y]) <=> euclidean_distance([restaurant_x, restaurant_y], [rider2.x, rider2.y])
+      euclidean_distance([restaurant.x, restaurant.y], [rider1.x, rider1.y]) <=> euclidean_distance([restaurant.x, restaurant.y], [rider2.x, rider2.y])
     end
 
     nearest_rider == @rider ? [restaurant, customer] : []
