@@ -68,11 +68,13 @@ describe DeliveryRouter do
       @customers = [
         Customer.new(:id => 1, :x => 1, :y => 1),
         Customer.new(:id => 2, :x => 5, :y => 1),
+        Customer.new(:id => 3, :x => 5, :y => 2),
       ]
 
       @restaurants = [
         Restaurant.new(:id => 3, :cooking_time => 15, :x => 0, :y => 0),
         Restaurant.new(:id => 4, :cooking_time => 35, :x => 5, :y => 5),
+        Restaurant.new(:id => 5, :cooking_time => 59, :x => 6, :y => 5),
       ]
 
       @riders = [
@@ -124,6 +126,23 @@ describe DeliveryRouter do
 
         it "delights customer 2" do
           expect(@delivery_router.delivery_time(:customer => 2)).to be < 60
+        end
+      end
+
+      context "given customer 3 orders from restaurant 5" do
+        before(:all) do
+          @delivery_router.add_order(:customer => 3, :restaurant => 5)
+        end
+
+        it "sends rider 1 to customer 3 through restaurant 5" do
+          route = @delivery_router.route(:rider => 1)
+          expect(route.length).to eql(2)
+          expect(route[0].id).to eql(5)
+          expect(route[1].id).to eql(3)
+        end
+
+        it "customer 3 should not be delighted" do
+          expect(@delivery_router.delivery_time(:customer => 3)).to be > 60
         end
       end
     end
