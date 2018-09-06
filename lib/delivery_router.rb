@@ -20,8 +20,8 @@ class DeliveryRouter
 
   def route(params)
     @rider = @riders.detect{ |x| x.id == params[:rider] }
-    restaurant = @orders.first[:restaurant]
-    customer = @orders.first[:customer]
+    restaurant = @orders.last[:restaurant]
+    customer = @orders.last[:customer]
 
     restaurant_x, restaurant_y = restaurant.x, restaurant.y
     
@@ -37,15 +37,13 @@ class DeliveryRouter
     restaurant = order[:restaurant]
     customer = order[:customer]
 
-    cooking_time = restaurant.cooking_time
     distance_rider_to_restaurant = euclidean_distance([@rider.x, @rider.y], [restaurant.x, restaurant.y])
-
     time_rider_to_restaurant = (distance_rider_to_restaurant / @rider.speed) * 60
 
     distance_restaurant_to_customer = euclidean_distance([customer.x, customer.y], [restaurant.x, restaurant.y])
     time_restaurant_to_customer = (distance_restaurant_to_customer / @rider.speed) * 60    
 
-    (cooking_time - time_rider_to_restaurant) + time_rider_to_restaurant + time_restaurant_to_customer
+    time_rider_to_restaurant + remaining_time_cooking(restaurant.cooking_time, time_rider_to_restaurant) + time_restaurant_to_customer
   end
 
   private
@@ -55,5 +53,9 @@ class DeliveryRouter
       sum_of_squares += (p1_coord - p2[index]) ** 2 
     end
     Math.sqrt(sum_of_squares)
+  end
+
+  def remaining_time_cooking(cooking_time, rider_time)
+    cooking_time > rider_time ? (cooking_time - rider_time).abs : 0
   end
 end
