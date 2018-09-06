@@ -57,6 +57,9 @@
 =end
 
 require 'delivery_router'
+require 'customer'
+require 'restaurant'
+require 'rider'
 
 describe DeliveryRouter do
   describe "#route" do
@@ -74,6 +77,7 @@ describe DeliveryRouter do
         Rider.new(:id => 1, :speed => 10, :x => 2, :y => 0),
         Rider.new(:id => 2, :speed => 10, :x => 1, :y => 0),
       ]
+
       @delivery_router = DeliveryRouter.new(@restaurants, @customers, @riders)
     end
 
@@ -106,6 +110,7 @@ describe DeliveryRouter do
 
       context "given customer 2 orders from restaurant 4" do
         before(:all) do
+          # @delivery_router.clear_orders(:customer => 1)
           @delivery_router.add_order(:customer => 2, :restaurant => 4)
         end
 
