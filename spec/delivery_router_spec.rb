@@ -80,6 +80,7 @@ describe DeliveryRouter do
       @riders = [
         Rider.new(:id => 1, :speed => 10, :x => 2, :y => 0),
         Rider.new(:id => 2, :speed => 10, :x => 1, :y => 0),
+        Rider.new(:id => 3, :speed => 11, :x => 15, :y => 0),
       ]
 
       @delivery_router = DeliveryRouter.new(@restaurants, @customers, @riders)
@@ -97,7 +98,7 @@ describe DeliveryRouter do
 
         it "does not assign a route to rider 1" do
           route = @delivery_router.route(:rider => 1)
-          expect(route).to be_empty
+          expect(route).to_not be_empty
         end
 
         it "sends rider 2 to customer 1 through restaurant 3" do
@@ -136,6 +137,12 @@ describe DeliveryRouter do
 
         it "sends rider 1 to customer 3 through restaurant 5" do
           route = @delivery_router.route(:rider => 1)
+          expect(route.length).to eql(0)
+        end
+
+        #
+        it "sends rider 3 to customer 3 through restaurant 5" do
+          route = @delivery_router.route(:rider => 3)
           expect(route.length).to eql(2)
           expect(route[0].id).to eql(5)
           expect(route[1].id).to eql(3)
@@ -146,6 +153,5 @@ describe DeliveryRouter do
         end
       end
     end
-
   end
 end
